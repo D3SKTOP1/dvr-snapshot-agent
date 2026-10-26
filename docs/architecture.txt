@@ -1,0 +1,34 @@
+┌────────────────────────────────────────────────────────────┐
+│                        dvr_monitor.exe                     │
+│                                                            │
+│  Thread principal (Tkinter)          Thread worker         │
+│  ┌─────────────────────┐            ┌──────────────────┐   │
+│  │   MonitorApp        │            │   AgentWorker    │   │
+│  │                     │◄──queue────│                  │   │ 
+│  │  _poll() cada 80ms  │            │  loop de captura │   │ 
+│  │  _handle(evento)    │            │  _query_alarm()  │   │
+│  │                     │            │  capture()       │   │
+│  │  Tabela de câmeras  │            │  store()         │   │
+│  │  Log colorido       │            │                  │   │
+│  │  Barra de progresso │            └──────────────────┘   │
+│  └─────────────────────┘                    │              │
+│                                             │ HTTP         │
+└─────────────────────────────────────────────│──────────────┘
+                                              ▼
+                                    ┌──────────────────┐
+                                    │   DVR Intelbras  │
+                                    │   MHDX 3104-C    │
+                                    │                  │
+                                    │ /cgi-bin/        │
+                                    │  snapshot.cgi    │
+                                    │  alarm.cgi       │
+                                    └──────────────────┘
+                                              │
+                              ┌───────────────┴──────────────┐
+                              ▼                               ▼
+                     D:\INJECTION\                   https://<your-api>
+                       cam01\*.jpg                      /ingest  (API)
+                       cam02\*.jpg
+
+Dependências:
+pip install requests
